@@ -33,7 +33,7 @@ public class RestAPI {
     @RequestMapping(
             value = "/sh/{encoded}",
             method = RequestMethod.GET)
-    public RedirectView redirect(@PathVariable String encoded, HttpServletResponse httpServletResponse){
+    public RedirectView redirect(@PathVariable String encoded){
         //TODO: Cache
         //TODO: Handle no record found
         String redirect_url = shortener.decodeAlias(encoded);
