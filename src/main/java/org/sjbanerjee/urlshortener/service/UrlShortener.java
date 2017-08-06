@@ -1,6 +1,7 @@
 package org.sjbanerjee.urlshortener.service;
 
 import org.sjbanerjee.urlshortener.dao.RecordDao;
+import org.sjbanerjee.urlshortener.exception.BadRequestException;
 import org.sjbanerjee.urlshortener.model.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,8 @@ public class UrlShortener {
     @Autowired
     RecordDao dao;
 
-    private static final String base_url = "https://sjbanerjee.com/";
+    //I know this beats the purpose of a short url.. duh
+    private static final String base_url = "https://sjbanerjee.com/sh/";
 
     private static final int base_bit = 62;
 
@@ -36,15 +38,14 @@ public class UrlShortener {
 
     @Transactional
 //    public Record shorten(@Value("${url}") String urltoshorten){
-    public Record shorten(String urltoshorten) {
+    public String shorten(String urltoshorten) {
 
         //Validate the URL
         URL url = null;
         try {
             url = new URL(urltoshorten);
         } catch (MalformedURLException e) {
-            System.out.println("Not a valid URL!!");
-            return null;
+            throw new BadRequestException("Not a valid URL!!");
         }
 
         //Get the last record index
@@ -52,15 +53,17 @@ public class UrlShortener {
         System.out.println("last index " + index);
 
         //Get the get the alias
-        String alias = base_url.concat(getAlias(index, length));
+        String encoded = getAlias(index, length);
+        String alias = base_url.concat(encoded);
 
         //Create a record and persist
-        Record record = new Record(index + 1, url.toString(), alias);
+        //TODO: Do not persist duplicate records
+        Record record = new Record(index + 1, url.toString(), encoded);
         addRecord(record);
         dao.persist(record);
         System.out.println("Short : " + alias);
 
-        return record;
+        return alias;
     }
 
     /**
@@ -90,5 +93,9 @@ public class UrlShortener {
         }
 
         return sb.reverse().toString();
+    }
+
+    public String decodeAlias(String alias){
+        return dao.getUrl(alias);
     }
 }

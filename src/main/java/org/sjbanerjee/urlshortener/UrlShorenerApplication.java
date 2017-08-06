@@ -16,18 +16,10 @@ public class UrlShorenerApplication {
 
     public static void main(String[] args) {
 
-        if(args.length < 1){
-            return;
-        }
-        
         ctx = SpringApplication.run(UrlShorenerApplication.class, args);
         logger.info("*************Started***************");
         DispatcherServlet dispatcherServlet = (DispatcherServlet)ctx.getBean("dispatcherServlet");
         dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
-
-        //Get the Authentication Header
-        UrlShortener shortener = (UrlShortener) ctx.getBean("urlShortener");
-        shortener.shorten(args[0]);
     }
 
 }

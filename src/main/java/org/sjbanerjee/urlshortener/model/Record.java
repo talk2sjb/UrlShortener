@@ -1,14 +1,20 @@
 package org.sjbanerjee.urlshortener.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Record")
-public class Record {
+public class Record implements Serializable{
 
     @Id
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "url")
     private String url;
+
+    @Column(name = "alias")
     private String alias;
 
     protected Record() {}
@@ -19,6 +25,18 @@ public class Record {
         this.alias = alias;
 
         System.out.println(this.toString() + " created");
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getAlias() {
+        return alias;
     }
 
     @Override
