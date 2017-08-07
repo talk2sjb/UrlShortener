@@ -5,12 +5,15 @@ import org.sjbanerjee.urlshortener.exception.BadRequestException;
 import org.sjbanerjee.urlshortener.model.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 @Component
 public class UrlShortener {
@@ -18,11 +21,11 @@ public class UrlShortener {
     //TODO: logger implementation
     //TODO: unit tests
 
-    @Autowired
-    RecordDao dao;
 
-    //I know this beats the purpose of a short url.. duh
-    private static final String base_url = "https://sjbanerjee.com/sh/";
+    @Autowired
+    private RecordRepository repository;
+
+    private static final String base_url = "localhost:8080/sh/";
 
     private static final int base_bit = 62;
 
@@ -37,7 +40,7 @@ public class UrlShortener {
     };
 
     @Transactional
-//    public Record shorten(@Value("${url}") String urltoshorten){
+    @Cacheable(cacheNames="alias", key="#urltoshorten")
     public String shorten(String urltoshorten) {
 
         //Validate the URL
@@ -48,31 +51,30 @@ public class UrlShortener {
             throw new BadRequestException("Not a valid URL!!");
         }
 
+        Record record = new Record();
+        record.setCreationDate(new Date());
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 5);
+        record.setExpiryDate(calendar.getTime());
+        record.setUrl(urltoshorten);
+
+        record = repository.save(record);
+
         //Get the last record index
-        Long index = dao.getLastRecordIndex();
+        Long index = record.getId();
         System.out.println("last index " + index);
 
         //Get the get the alias
         String encoded = getAlias(index, length);
         String alias = base_url.concat(encoded);
 
-        //Create a record and persist
-        //TODO: Do not persist duplicate records
-        Record record = new Record(index + 1, url.toString(), encoded);
-        addRecord(record);
-        dao.persist(record);
+        record.setAlias(encoded);
+        repository.save(record);
         System.out.println("Short : " + alias);
 
         return alias;
     }
 
-    /**
-     * Persist the record. A transactional call
-     */
-    @Transactional
-    private void addRecord(Record record) {
-        dao.persist(record);
-    }
 
     /**
      * Get alias from the passed index
@@ -95,7 +97,11 @@ public class UrlShortener {
         return sb.reverse().toString();
     }
 
+    @Cacheable(cacheNames="url", key="#alias")
     public String decodeAlias(String alias){
-        return dao.getUrl(alias);
+//        Record record = repository.findByAlias(alias);
+        Record record = repository.findRecord(alias, new Date());
+        if(record == null) return "";
+        return record.getUrl();
     }
 }

@@ -2,6 +2,7 @@ package org.sjbanerjee.urlshortener.api;
 
 import org.json.JSONObject;
 import org.sjbanerjee.urlshortener.exception.BadRequestException;
+import org.sjbanerjee.urlshortener.service.RecordRepository;
 import org.sjbanerjee.urlshortener.service.UrlShortener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,11 +21,13 @@ public class RestAPI {
     @Autowired
     UrlShortener shortener;
 
+
     @RequestMapping(
             value = "/shorten",
             method = RequestMethod.POST,
             consumes = "application/json",
             produces = "text/plain")
+    @CrossOrigin
     public String shorten(@RequestBody String requestBody){
         JSONObject obj = new JSONObject(requestBody);
         return shortener.shorten(obj.getString("url"));

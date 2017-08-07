@@ -1,33 +1,35 @@
 package org.sjbanerjee.urlshortener.model;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "Record")
 public class Record implements Serializable{
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Long id;
 
-    @Column(name = "url")
+    @Column
     private String url;
 
-    @Column(name = "alias")
+    @Column
     private String alias;
 
-    protected Record() {}
+    @Column
+    private Date creationDate;
 
-    public Record(Long id, String url, String alias) {
-        this.id = id;
-        this.url = url;
-        this.alias = alias;
+    @Column
+    private Date expiryDate;
 
-        System.out.println(this.toString() + " created");
-    }
+    public Record() {}
 
-    public Long getId() {
+     public Long getId() {
         return id;
     }
 
@@ -37,6 +39,34 @@ public class Record implements Serializable{
 
     public String getAlias() {
         return alias;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     @Override
