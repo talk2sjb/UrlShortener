@@ -1,17 +1,15 @@
 package org.sjbanerjee.urlshortener.service;
 
-import org.sjbanerjee.urlshortener.dao.RecordDao;
+import org.sjbanerjee.urlshortener.dao.RecordRepository;
 import org.sjbanerjee.urlshortener.exception.BadRequestException;
 import org.sjbanerjee.urlshortener.model.Record;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 

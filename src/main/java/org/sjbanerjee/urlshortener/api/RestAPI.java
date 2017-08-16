@@ -2,17 +2,12 @@ package org.sjbanerjee.urlshortener.api;
 
 import org.json.JSONObject;
 import org.sjbanerjee.urlshortener.exception.BadRequestException;
-import org.sjbanerjee.urlshortener.service.RecordRepository;
 import org.sjbanerjee.urlshortener.service.UrlShortener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-
-import javax.servlet.http.HttpServletResponse;
-import java.net.URL;
 
 @RestControllerAdvice
 @RestController
