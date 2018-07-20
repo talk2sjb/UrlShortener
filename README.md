@@ -1,5 +1,6 @@
 # UrlShortener
 A simple URL shortening program
+```[Follow the blog here](http://sjbanerjee.com/2017/08/18/writing-a-url-shortening-service/)```
 
 # Build
 ```mvn clean install```
@@ -13,5 +14,3 @@ A simple URL shortening program
 >You may also use Postman or any other Rest client
 
 >Test by hitting the shortened URL from browser
-
-#[Follow the blog here](http://sjbanerjee.com/2017/08/18/writing-a-url-shortening-service/)
