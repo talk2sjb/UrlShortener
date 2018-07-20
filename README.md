@@ -1,5 +1,7 @@
 # UrlShortener
-A simple URL shortening program
+A simple URL shortening program.
+
+
 [Follow the blog here](http://sjbanerjee.com/2017/08/18/writing-a-url-shortening-service/)
 
 # Build
